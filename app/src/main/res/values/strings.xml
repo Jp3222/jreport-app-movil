@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">JReport V2</string>
+    <string name="usuario">Usuario</string>
+    <string-array name="opcion">
+        <item>usuario</item>
+    </string-array>
+    <string name="title_activity_vmapa">VMapa</string>
+</resources>

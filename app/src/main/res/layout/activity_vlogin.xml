@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VLogin">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="150sp"
+            android:layout_marginLeft="30sp"
+            android:layout_marginTop="64dp"
+            android:layout_marginRight="30sp"
+            app:srcCompat="@drawable/usuario" />
+
+        <EditText
+            android:id="@+id/lc_usuario"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="30sp"
+            android:layout_marginTop="50sp"
+            android:layout_marginRight="30sp"
+            android:width="300sp"
+            android:height="25sp"
+
+            android:ems="10"
+            android:hint="@string/usuario"
+            android:inputType="text"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/lc_contraseña"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30sp"
+            android:layout_marginTop="30sp"
+            android:layout_marginRight="30sp"
+            android:width="300sp"
+            android:height="25sp"
+            android:ems="10"
+            android:hint="contraseña"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/lb_inicio_sesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30sp"
+            android:layout_marginTop="100sp"
+            android:layout_marginRight="30sp"
+            android:width="300sp"
+            android:height="30sp"
+            android:backgroundTint="@color/blue"
+            android:text="Iniciar Sesion"
+            android:textColorLink="#0081F2" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
+            android:width="300sp"
+            android:height="25sp"
+            android:text="o"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/lb_registrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
+            android:width="300sp"
+            android:height="30sp"
+            android:backgroundTint="@color/blue"
+            android:text="Registrarme"
+            android:textColorLink="#0081F2" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
