@@ -104,6 +104,6 @@ public class VPrincipal extends AppCompatActivity implements ViewStruc {
             menssage = "Linda Madrugada";
         }
         Sesion s = Sesion.getInstancia();
-        saludo.setText(menssage + s.getUsuario().get("nombre"));
+        if(!s.sesionVacia()) saludo.setText(menssage.concat(" ").concat(s.getUsuario().getString("nombre")));
     }
 }

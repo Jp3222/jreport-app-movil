@@ -8,7 +8,7 @@ public class ApiJeport {
         return instancia;
     }
 
-    private static String[] TAB = {"User", "Reportes", "Test"};
+    private static String[] TAB = {"User", "Reportes", "Test", "TipoReportes"};
     private static String[] METOD = {"Save", "Get", "Delete", "Edit", "Login"};
     private static String FORMATO = "%s%s.php";
 
@@ -24,6 +24,10 @@ public class ApiJeport {
         return String.format(FORMATO, TAB[2], METOD[metodo]);
     }
 
+    private static String urlTipoReportes(int metodo) {
+        return String.format(FORMATO, TAB[3], METOD[metodo]);
+    }
+
     public static String USUARIOS_SAVE = urlUsuarios(0);
     ;
     public static String USUARIOS_DELTE = urlUsuarios(2);
@@ -33,12 +37,13 @@ public class ApiJeport {
     public static String REPORTES_GET = urlReportes(1);
     public static String REPORTES_DELTE = urlReportes(2);
     public static String REPORTES_EDIT = urlReportes(3);
-
     public static String TEST_SAVE = urlTest(0);
-
-    private static final String DOMINIO = "192.168.1.76";
+    public static final String TIPO_REPORTES_GET =urlTipoReportes(1) ;
+    //http://192.168.1.76/
+    private static final String DOMINIO = "192.168.122.1R";
     private static final String PORT = "80";
     private static final String URL = "http://%s:%s/jreport/api/%s";
+
     public static String apiMetod(String metod) {
         return String.format(URL, DOMINIO, PORT, metod);
     }

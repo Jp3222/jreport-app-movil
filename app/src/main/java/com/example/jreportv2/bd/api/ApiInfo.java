@@ -42,7 +42,7 @@ public class ApiInfo {
     private final String URL;
 
     private ApiInfo() {
-        DOMINIO = "192.168.1.73";
+        DOMINIO = "192.168.1.92";
         PORT = "80";
         URL = "http://%s:%s/jreport/api/%s";
     }

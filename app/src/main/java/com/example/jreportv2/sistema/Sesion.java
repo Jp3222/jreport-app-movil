@@ -33,4 +33,7 @@ public class Sesion {
         usuario = null;
     }
 
+    public boolean sesionVacia(){
+        return usuario == null;
+    }
 }

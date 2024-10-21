@@ -9,7 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jreportv2.bd.ApiJeport;
-import com.example.jreportv2.controladores.CLogin;
+import com.example.jreportv2.controladores.CUsuarios;
+import com.example.jreportv2.controladores.FabricaControlador;
 import com.example.jreportv2.util.Filtros;
 
 import java.util.HashMap;
@@ -28,6 +29,7 @@ public class VLogin extends AppCompatActivity {
     }
 
     public void init() {
+        controlador = FabricaControlador.getControladorUsuarios();
         campo_nombre = findViewById(R.id.lc_usuario);
         campo_contraseña = findViewById(R.id.lc_contraseña);
         inicio_sesion = findViewById(R.id.lb_inicio_sesion);
@@ -51,8 +53,8 @@ public class VLogin extends AppCompatActivity {
         Map<String, String> mapa = new HashMap<>(2);
         mapa.put("usuario", user);
         mapa.put("contra", password);
-        System.out.println(ApiJeport.apiMetod(ApiJeport.USUARIOS_LOGIN));
-        CLogin.login(this,
+
+        FabricaControlador.getControladorUsuarios().login(this,
                 ApiJeport.apiMetod(ApiJeport.USUARIOS_LOGIN),
                 mapa,
                 this::evtPrincipal);
@@ -69,10 +71,13 @@ public class VLogin extends AppCompatActivity {
     public void evtRegistrar() {
         Intent intent = new Intent(this, VRegistro.class);
         startActivity(intent);
+        finish();
     }
 
     public void estadoInicial() {
         campo_nombre.setText(null);
         campo_contraseña.setText(null);
     }
+
+    private CUsuarios controlador;
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -11,8 +12,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.jreportv2.bd.ApiJeport;
+import com.example.jreportv2.controladores.FabricaControlador;
 import com.example.jreportv2.sistema.Sesion;
 import com.example.jreportv2.util.Filtros;
 import com.example.jreportv2.util.ViewStruc;
@@ -24,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -45,8 +56,9 @@ public class VReportes extends AppCompatActivity implements ViewStruc,
     private String options;
     //**--Variables para manipular la camara--**//
     private Button btnCamara;
+    private Button guardar;
     private ImageView imgView;
-
+    private Map<String, String> mapa_tipo_de_reportes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +69,22 @@ public class VReportes extends AppCompatActivity implements ViewStruc,
 
     @Override
     public void init() {
-        SupportMapFragment smp = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.rc_mapa);
-        if (smp != null) smp.getMapAsync(this);
+        mapa_tipo_de_reportes = new HashMap<>(10);
+        btnCamara = findViewById(R.id.rc_agregar_fotos);
+        tipo = findViewById(R.id.rc_tipo_reporte);
+        descripcion = findViewById(R.id.rc_descripcion);
+        guardar = findViewById(R.id.rb_guardar);
+        fillSpinner();
         compoentesEstadoFinal();
         compoentesEstadoInicial();
         manejoEventos();
+        SupportMapFragment smp = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.rc_mapa);
+        if (smp != null) smp.getMapAsync(this);
     }
 
     @Override
     public void compoentesEstadoInicial() {
-
+        tipo.setSelection(0);
     }
 
     @Override
@@ -76,7 +94,8 @@ public class VReportes extends AppCompatActivity implements ViewStruc,
 
     @Override
     public void manejoEventos() {
-        btnCamara.setOnClickListener(e -> abrirCamara());
+        //btnCamara.setOnClickListener(e -> abrirCamara());
+        guardar.setOnClickListener(e -> evtGenerarReporte());
     }
 
     @Override
@@ -147,12 +166,12 @@ public class VReportes extends AppCompatActivity implements ViewStruc,
         lt = LocalTime.now();
         String no_reporte = String.format("%s_%s",
                 ld.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                lt.format(DateTimeFormatter.ofPattern("HH_MM_SS"))
+                lt.format(DateTimeFormatter.ofPattern("hh-mm-ss"))
         );
         String usuario;
         try {
             usuario = Sesion.getInstancia().getUsuario().getString("id");
-            if(!Filtros.noNullAndEmpty(usuario)){
+            if (!Filtros.noNullAndEmpty(usuario)) {
                 Toast.makeText(this, "Error al enviar el reporte", Toast.LENGTH_LONG).show();
             }
         } catch (JSONException e) {
@@ -160,13 +179,58 @@ public class VReportes extends AppCompatActivity implements ViewStruc,
         }
         String lat = String.valueOf(punto.latitude);
         String lon = String.valueOf(punto.longitude);
-        Map<String, String> mapa = new HashMap<>(7);
-        mapa.put("tipo",String.valueOf(tipo.getSelectedItem()));
-        mapa.put("usuario",usuario);
-        mapa.put("descripcion",descripcion.getText().toString());
-        mapa.put("url_multimedia",String.format("%s/%s", usuario, no_reporte));
-        mapa.put("lat", String.valueOf(punto.latitude));
-        mapa.put("lon", String.valueOf(punto.longitude));
-        mapa.put("no_reporte",no_reporte);
+
+        Map<String, String> mapa_post = new HashMap<>();
+        mapa_post.put("tipo", String.valueOf(mapa_tipo_de_reportes.get(tipo.getSelectedItem().toString())));
+        mapa_post.put("usuario", usuario);
+        mapa_post.put("descripcion", descripcion.getText().toString());
+        mapa_post.put("url_multimedia", String.format("%s/%s", usuario, no_reporte));
+        mapa_post.put("lat", lat);
+        mapa_post.put("lon", lon);
+        mapa_post.put("no_reporte", no_reporte);
+        System.out.println(mapa_post);
+        StringRequest sr = new StringRequest(Request.Method.POST, ApiJeport.apiMetod(ApiJeport.REPORTES_SAVE),
+                e -> {
+                    Toast.makeText(this, "Reporte Enviado", Toast.LENGTH_LONG).show();
+                },
+                e ->{
+                    Toast.makeText(this, "Reporte Erroneo", Toast.LENGTH_LONG).show();
+                }) {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return mapa_post;
+            }
+        };
+        RequestQueue rq = Volley.newRequestQueue(this);
+        rq.add(sr);
+        /*
+        FabricaControlador.getControladorReportes().put(this,
+                mapa_post,
+                ApiJeport.apiMetod(ApiJeport.REPORTES_SAVE),
+                Toast.makeText(this, "Reporte Enviado", Toast.LENGTH_LONG)::show
+        );*/
+    }
+
+    private void fillSpinner() {
+        JsonArrayRequest jar = new JsonArrayRequest(ApiJeport.apiMetod(ApiJeport.TIPO_REPORTES_GET),
+                ok -> {
+                    ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+                    int size_obj = ok.length();
+                    for (int i = 0; i < size_obj; i++) {
+                        try {
+                            JSONObject jsonArray = ok.getJSONObject(i);
+                            adaptador.add(jsonArray.getString("tipo"));
+                            mapa_tipo_de_reportes.put(jsonArray.getString("tipo"), jsonArray.getString("id"));
+                        } catch (JSONException e) {
+                            System.out.println("error");
+                        }
+                    }
+                    tipo.setAdapter(adaptador);
+                },
+                err -> Toast.makeText(this, "Error en el servicio", Toast.LENGTH_LONG).show());
+
+        RequestQueue rq = Volley.newRequestQueue(this);
+        rq.add(jar);
     }
 }

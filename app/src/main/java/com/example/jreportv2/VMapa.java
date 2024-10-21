@@ -1,9 +1,11 @@
 package com.example.jreportv2;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 
+import com.example.jreportv2.util.ViewStruc;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -12,11 +14,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.jreportv2.databinding.ActivityVmapaBinding;
 
-public class VMapa extends FragmentActivity implements OnMapReadyCallback {
+import java.util.List;
+import java.util.Map;
+
+public class VMapa extends FragmentActivity implements ViewStruc,
+        OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
     private ActivityVmapaBinding binding;
-
+    private List<MarkerOptions> lista_puntos;
+    private List<Map<String, String>> lista_reportes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,5 +54,35 @@ public class VMapa extends FragmentActivity implements OnMapReadyCallback {
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void compoentesEstadoInicial() {
+
+    }
+
+    @Override
+    public void compoentesEstadoFinal() {
+
+    }
+
+    @Override
+    public void manejoEventos() {
+
+    }
+
+    @Override
+    public void onMapClick(@NonNull LatLng latLng) {
+
+    }
+
+    @Override
+    public void onMapLongClick(@NonNull LatLng latLng) {
+
     }
 }

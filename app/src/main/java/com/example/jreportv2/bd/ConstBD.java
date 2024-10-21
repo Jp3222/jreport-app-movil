@@ -22,6 +22,11 @@ public class ConstBD {
      * <br> 1 usuario
      * <br> 2 contraseña
      * <br> 3 nombre
+     * <br> 4 apellidos
+     * <br> 5 telefono
+     * <br> 6 correo
+     * <br> 7 fecha_registro
+     * <br> 8 no_contrato
      */
     public static String[] TAB_USUARIOS = {
             "id",
